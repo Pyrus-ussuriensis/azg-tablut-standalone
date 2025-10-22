@@ -2,18 +2,19 @@
 
 class Tafl:
     size=0
-    board=[]
-    pieces=[]
+    board=[] # 地形，包括角落和王座
+    pieces=[] # 棋子状态
     def expandeighth(self,size,eighth):
-        hs=size//2
+        hs=size//2 # 4
         aquarter=eighth.copy()
         for b in eighth:
-            if b[0]!=b[1]: aquarter.extend([[b[1],b[0],b[2]]])
+            if b[0]!=b[1]: aquarter.extend([[b[1],b[0],b[2]]]) # 不在对角线则沿y=x对称翻转 扩成1/4
         whole=aquarter.copy()
         for b in aquarter:
-            if (b[0]!=hs): whole.extend([[size-b[0]-1,b[1],b[2]]])
-            if (b[1]!=hs): whole.extend([[b[0],size-b[1]-1,b[2]]])
-            if (b[0]!=hs and b[1]!=hs): whole.extend([[size-b[0]-1,size-b[1]-1,b[2]]])
+            # 不在轴上
+            if (b[0]!=hs): whole.extend([[size-b[0]-1,b[1],b[2]]]) # 沿y轴对称 1/2
+            if (b[1]!=hs): whole.extend([[b[0],size-b[1]-1,b[2]]]) # 沿x轴对称 1/2
+            if (b[0]!=hs and b[1]!=hs): whole.extend([[size-b[0]-1,size-b[1]-1,b[2]]]) # 不在中心，中心对称
         return whole    
 
 

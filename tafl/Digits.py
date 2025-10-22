@@ -3,7 +3,7 @@
 import string
 digs = string.digits + string.ascii_letters
 
-
+'''
 def int2base(x, base, length):
     if x < 0:
         sign = -1
@@ -25,6 +25,18 @@ def int2base(x, base, length):
     while len(digits)<length: digits.extend(["0"])
     
     return list(map(lambda x: int(x),digits))
+'''
+def int2base(x, base, length):
+    if x < 0:
+        raise ValueError("x must be non-negative")
+    out = [0]*length
+    for k in range(length):
+        out[k] = x % base
+        x //= base
+    if x != 0:
+        raise ValueError("x >= base**length")
+    return out  # [d0,d1,d2,d3] = [x1,y1,x2,y2]
+
     
 
 def test():

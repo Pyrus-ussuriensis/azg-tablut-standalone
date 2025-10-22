@@ -46,6 +46,7 @@ class Arena():
             if hasattr(player, "startGame"):
                 player.startGame()
 
+        # 不断跑，取动作，验证合理，跑一次 显示
         while self.game.getGameEnded(board, curPlayer) == 0:
             it += 1
             if verbose:
@@ -78,6 +79,7 @@ class Arena():
             self.display(board)
         return curPlayer * self.game.getGameEnded(board, curPlayer)
 
+    # 按照给的盘数，跑一半，交换棋子，跑另一半，返回最终记录的值
     def playGames(self, num, verbose=False):
         """
         Plays num games in which player1 starts num/2 games and player2 starts

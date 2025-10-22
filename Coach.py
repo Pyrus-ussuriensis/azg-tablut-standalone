@@ -29,6 +29,7 @@ class Coach():
         self.trainExamplesHistory = []  # history of examples from args.numItersForTrainExamplesHistory latest iterations
         self.skipFirstSelfPlay = False  # can be overriden in loadTrainExamples()
 
+    # 控制训练，输出训练的记录用于训练
     def executeEpisode(self):
         """
         This function executes one episode of self-play, starting with player 1.
@@ -57,8 +58,8 @@ class Coach():
 
             pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
             sym = self.game.getSymmetries(canonicalBoard, pi)
-            for b, p in sym:
-                trainExamples.append([b, self.curPlayer, p, None])
+            for b, p in sym: # board, pi
+                trainExamples.append([b.astype(np.float32), self.curPlayer, p, None]) # 添加了从board到矩阵的转化，是否数据能够被网络处理
 
             action = np.random.choice(len(pi), p=pi)
             board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
@@ -68,6 +69,7 @@ class Coach():
             if r != 0:
                 return [(x[0], x[2], r * ((-1) ** (x[1] != self.curPlayer))) for x in trainExamples]
 
+    # 总的学习流程，先训练，然后进行评估
     def learn(self):
         """
         Performs numIters iterations with numEps episodes of self-play in each

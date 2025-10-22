@@ -14,7 +14,9 @@ class Board():
       self.done=0
 
     def __str__(self):
-        return str(self.getPlayerToMove()) + ''.join(str(r) for v in self.getImage() for r in v) 
+        img = self.getImage()
+        flat = ''.join(str(r) for v in img for r in v)
+        return f"{self.getPlayerToMove()}|t{self.time}|d{self.done}|{flat}" # 增加了终局值，避免出现同样的局面因超时结束与没有超时的影响
 
     # add [][] indexer syntax to the Board
     def __getitem__(self, index): 
@@ -88,7 +90,7 @@ class Board():
     def _isLegalMove(self,pieceno,x2,y2):
       try:
 
-         if x2 < 0 or y2 < 0 or x2 >= self.width or y2 > self.height: return -1
+         if x2 < 0 or y2 < 0 or x2 >= self.width or y2 >= self.height: return -1 # 原版有误
          
          piece = self.pieces[pieceno]
          x1=piece[0]
@@ -98,9 +100,9 @@ class Board():
          if x1 == x2 and y1 == y2: return -4 #no move
 
          piecetype = piece[2]
-         if (piecetype == -1 and self.time%2 == 0) or (piecetype != -1 and self.time%2 == 1): return -5 #wrong player
+         if (piecetype == -1 and self.time%2 == 0) or (piecetype != -1 and self.time%2 == 1): return -5 #wrong player # time指轮数
 
-         for item in self.board:
+         for item in self.board: # 是否目的地是禁落点
             if item[0] == x2 and item[1] == y2 and item[2] > 0:
                 if piecetype != 2: return -10 #forbidden space
          for apiece in self.pieces:
@@ -164,6 +166,7 @@ class Board():
        return -1  #white lost
    
     def _getPieceNo(self,x,y):
+        # 返回棋子序号
        for pieceno in range(len(self.pieces)):
            piece=self.pieces[pieceno]
            if piece[0]==x and piece[1]==y: return pieceno

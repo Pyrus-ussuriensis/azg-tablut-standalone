@@ -25,6 +25,7 @@ class MCTS():
         self.Es = {}  # stores game.getGameEnded ended for board s
         self.Vs = {}  # stores game.getValidMoves for board s
 
+    # 控制总流程，进行MCTS，然后根据temp选择
     def getActionProb(self, canonicalBoard, temp=1):
         """
         This function performs numMCTSSims simulations of MCTS starting from
@@ -52,6 +53,8 @@ class MCTS():
         probs = [x / counts_sum for x in counts]
         return probs
 
+    # 整个流程是先获取要计算u需要的值，如果不存在的补一个初值，然后计算出所有动作的u值，
+    # 然后得到最大的，再选择值最大的动作，给环境跑这个动作，递归的跑，然后得到返回值后更新相应的边的值
     def search(self, canonicalBoard):
         """
         This function performs one iteration of MCTS. It is recursively called
@@ -74,20 +77,20 @@ class MCTS():
 
         s = self.game.stringRepresentation(canonicalBoard)
 
-        if s not in self.Es:
-            self.Es[s] = self.game.getGameEnded(canonicalBoard, 1)
-        if self.Es[s] != 0:
+        if s not in self.Es: # 如果这个状态没有记录过终局值
+            self.Es[s] = self.game.getGameEnded(canonicalBoard, 1) # 记录一次值
+        if self.Es[s] != 0: # 不为0，结束
             # terminal node
             return -self.Es[s]
 
         if s not in self.Ps:
             # leaf node
-            self.Ps[s], v = self.nnet.predict(canonicalBoard)
-            valids = self.game.getValidMoves(canonicalBoard, 1)
-            self.Ps[s] = self.Ps[s] * valids  # masking invalid moves
-            sum_Ps_s = np.sum(self.Ps[s])
+            self.Ps[s], v = self.nnet.predict(canonicalBoard) # 用网络预测初值
+            valids = self.game.getValidMoves(canonicalBoard, 1) # 得到合法动作
+            self.Ps[s] = self.Ps[s] * valids  # masking invalid moves # 筛选合法动作
+            sum_Ps_s = np.sum(self.Ps[s]) # 得到所有合法动作值之和
             if sum_Ps_s > 0:
-                self.Ps[s] /= sum_Ps_s  # renormalize
+                self.Ps[s] /= sum_Ps_s  # renormalize # 算每个合法动作的百分比
             else:
                 # if all valid moves were masked make all valid moves equally probable
 
@@ -97,7 +100,7 @@ class MCTS():
                 self.Ps[s] = self.Ps[s] + valids
                 self.Ps[s] /= np.sum(self.Ps[s])
 
-            self.Vs[s] = valids
+            self.Vs[s] = valids # 记录
             self.Ns[s] = 0
             return -v
 
@@ -109,7 +112,7 @@ class MCTS():
         for a in range(self.game.getActionSize()):
             if valids[a]:
                 if (s, a) in self.Qsa:
-                    u = self.Qsa[(s, a)] + self.args.cpuct * self.Ps[s][a] * math.sqrt(self.Ns[s]) / (
+                    u = self.Qsa[(s, a)] + self.args.cpuct * self.Ps[s][a] * math.sqrt(self.Ns[s]) / ( # 综合数据对于是否选这条边的评估
                             1 + self.Nsa[(s, a)])
                 else:
                     u = self.args.cpuct * self.Ps[s][a] * math.sqrt(self.Ns[s] + EPS)  # Q = 0 ?
@@ -125,8 +128,8 @@ class MCTS():
         v = self.search(next_s)
 
         if (s, a) in self.Qsa:
-            self.Qsa[(s, a)] = (self.Nsa[(s, a)] * self.Qsa[(s, a)] + v) / (self.Nsa[(s, a)] + 1)
-            self.Nsa[(s, a)] += 1
+            self.Qsa[(s, a)] = (self.Nsa[(s, a)] * self.Qsa[(s, a)] + v) / (self.Nsa[(s, a)] + 1) # 边的平均回报的更新
+            self.Nsa[(s, a)] += 1 # 边的经过次数
 
         else:
             self.Qsa[(s, a)] = v
