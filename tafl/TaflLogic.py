@@ -88,50 +88,74 @@ class Board():
 ################## Internal methods ##################
 
     def _isLegalMove(self,pieceno,x2,y2):
-      try:
+        try:
 
-         if x2 < 0 or y2 < 0 or x2 >= self.width or y2 >= self.height: return -1 # 原版有误
-         
-         piece = self.pieces[pieceno]
-         x1=piece[0]
-         y1=piece[1]
-         if x1<0: return -2 #piece was captured
-         if x1 != x2 and y1 != y2: return -3 #must move in straight line
-         if x1 == x2 and y1 == y2: return -4 #no move
+            # 是否超过棋盘范围
+            if x2 < 0 or y2 < 0 or x2 >= self.width or y2 >= self.height: return -1 # 原版有误
+            
+            piece = self.pieces[pieceno]
+            x1=piece[0]
+            y1=piece[1]
+            # 棋子已经死亡
+            if x1<0: return -2 #piece was captured
+            # 没有走直线
+            if x1 != x2 and y1 != y2: return -3 #must move in straight line
+            # 没有移动
+            if x1 == x2 and y1 == y2: return -4 #no move
 
-         piecetype = piece[2]
-         if (piecetype == -1 and self.time%2 == 0) or (piecetype != -1 and self.time%2 == 1): return -5 #wrong player # time指轮数
+            piecetype = piece[2]
+            if (piecetype == -1 and self.time%2 == 0) or (piecetype != -1 and self.time%2 == 1): return -5 #wrong player # time指轮数
 
-         for item in self.board: # 是否目的地是禁落点
-            if item[0] == x2 and item[1] == y2 and item[2] > 0:
-                if piecetype != 2: return -10 #forbidden space
-         for apiece in self.pieces:
-            if y1==y2 and y1 == apiece[1] and ((x1 < apiece[0] and x2 >= apiece[0]) or (x1 > apiece[0] and x2 <= apiece[0])): return -20 #interposing piece
-            if x1==x2 and x1 == apiece[0] and ((y1 < apiece[1] and y2 >= apiece[1]) or (y1 > apiece[1] and y2 <= apiece[1])): return -20 #interposing piece
+            # 目的地是王座，禁落
+            for item in self.board: # 是否目的地是禁落点
+                if item[0] == x2 and item[1] == y2 and item[2] > 0:
+                    return -10 #forbidden space
+                # 禁止经过王座
+                if y1==y2 and y1 == item[1] and ((x1 < item[0] and x2 >= item[0]) or (x1 > item[0] and x2 <= item[0])): 
+                    return -10
+                if x1==x2 and x1 == item[0] and ((y1 < item[1] and y2 >= item[1]) or (y1 > item[1] and y2 <= item[1])): 
+                    return -10
+            # x,y两个方向是否路径中间有棋子
+            for apiece in self.pieces:
+                if y1==y2 and y1 == apiece[1] and ((x1 < apiece[0] and x2 >= apiece[0]) or (x1 > apiece[0] and x2 <= apiece[0])): return -20 #interposing piece
+                if x1==x2 and x1 == apiece[0] and ((y1 < apiece[1] and y2 >= apiece[1]) or (y1 > apiece[1] and y2 <= apiece[1])): return -20 #interposing piece
 
-         return 0 # legal move
-      except Exception as ex:
-         print("error in islegalmove ",ex,pieceno,x2,y2)
-         raise
+            return 0 # legal move
+        except Exception as ex:
+            print("error in islegalmove ",ex,pieceno,x2,y2)
+            raise
 
    
     def _getCaptures(self,pieceno,x2,y2):
-       #Assumes was already checked for legal move
-       captures=[]
-       piece=self.pieces[pieceno]
-       piecetype = piece[2]
-       for apiece in self.pieces:
-          if piecetype*apiece[2] < 0:
-             d1 = apiece[0]-x2 
-             d2 = apiece[1]-y2
-             if (abs(d1)==1 and d2==0) or (abs(d2)==1 and d1==0): 
-                 for bpiece in self.pieces:
-                    if piecetype*bpiece[2] > 0 and not(piece[0]==bpiece[0] and piece[1]==bpiece[1]):
-                       e1 = bpiece[0]-apiece[0]
-                       e2 = bpiece[1]-apiece[1]
-                       if d1==e1 and d2==e2:
-                          captures.extend([apiece])
-       return captures
+        #Assumes was already checked for legal move
+        captures=[]
+        piece=self.pieces[pieceno]
+        piecetype = piece[2]
+        for apiece in self.pieces:
+            # 如果是敌对棋子
+            if piecetype*apiece[2] < 0:
+                d1 = apiece[0]-x2 
+                d2 = apiece[1]-y2
+                # 如果挨着
+                if (abs(d1)==1 and d2==0) or (abs(d2)==1 and d1==0): 
+                    check = True
+                    throne = self.width // 2
+                    for bpiece in self.pieces:
+                        # 如果没有检测过，同时王不在王座
+                        if check and bpiece[2] == 2 and (bpiece[0] != throne or bpiece[1] != throne):
+                            check = False
+                            e1 = throne-apiece[0]
+                            e2 = throne-apiece[1]
+                            if d1==e1 and d2==e2:
+                                captures.extend([apiece])
+
+                        # 是己方的棋子，但不是自己
+                        if piecetype*bpiece[2] > 0 and not(piece[0]==bpiece[0] and piece[1]==bpiece[1]):
+                            e1 = bpiece[0]-apiece[0]
+                            e2 = bpiece[1]-apiece[1]
+                            if d1==e1 and d2==e2:
+                                captures.extend([apiece])
+        return captures
 
     # returns code for invalid mode (<0) or number of pieces captured
     def _moveByPieceNo(self,pieceno,x2,y2):

@@ -33,7 +33,8 @@ class ArdRi(Tafl):
 class Tablut(Tafl):
    def __init__(self): 
      self.size=9
-     self.board=self.expandeighth(self.size,[[0,0,1],[4,4,2]])
+     #self.board=self.expandeighth(self.size,[[0,0,1],[4,4,2]])
+     self.board=self.expandeighth(self.size,[[4,4,2]])
      self.pieces=self.expandeighth(self.size,[[3,0,-1],[4,0,-1],[4,1,-1],[4,2,1],[4,3,1],[4,4,2]])
 
 class Tawlbwrdd(Tafl):
