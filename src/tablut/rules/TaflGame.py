@@ -68,26 +68,64 @@ class TaflGame(Game):
 
     def getSymmetries(self, board, pi):
         n = self.n
+        if hasattr(board, "astype"):
+            base = board.astype(np.int8)
+        elif hasattr(board, "getImage"):
+            base = np.asarray(board.getImage(), dtype=np.int8)
+        else:
+            base = np.asarray(board, dtype=np.int8)
+
         pi = np.asarray(pi, dtype=np.float32)
+        perms = action_perms(n)  # (8, n**4)
         out = []
         for k in range(4):
-            r = np.rot90(board, k) 
+            r = np.rot90(base, k) if base.ndim == 2 else np.rot90(base, k, axes=(-2, -1))
+            for flip in (0, 1):
+                img = np.fliplr(r) if (flip and base.ndim == 2) else (np.flip(r, axis=-1) if flip else r)
+                s = k*2 + flip
+                new = pi[perms[s]]           # O(n^4) 的一次性重排
+                out.append((img, new))
+        return out
+    #def getSymmetries(self, board, pi):
+        #return [(board,pi)]
+        '''
+        n = self.n
+
+        # 1) board -> 数值图像 (H,W)
+        if hasattr(board, "astype"):          # 你的 Board 定义了 astype(t) -> np.array(getImage()).astype(t)
+            base = board.astype(np.int8)
+        elif hasattr(board, "getImage"):
+            base = np.asarray(board.getImage(), dtype=np.int8)
+        else:
+            base = np.asarray(board, dtype=np.int8)
+            if base.ndim == 0:
+                raise TypeError("getSymmetries expected array-like board; got scalar/object.")
+
+        # 2) π -> ndarray
+        pi = np.asarray(pi, dtype=np.float32)
+
+        out = []
+        for k in range(4):                     # 0/90/180/270
+            r = np.rot90(base, k)              # 不要直接在 base 上翻
             for flip in (0, 1):
                 img = np.fliplr(r) if flip else r
                 new = np.zeros_like(pi)
+
                 for a, p in enumerate(pi):
-                    if a == n**4 - 1:  # pass
-                        new[a] += p; continue
-                    x1,y1,x2,y2 = int2base(a, n, 4)
-                    x1,y1 = rot_xy(x1, y1, n, k)
-                    x2,y2 = rot_xy(x2, y2, n, k)
+                    if a == n**4 - 1:          # pass 槽位不动
+                        new[a] += p
+                        continue
+                    x1, y1, x2, y2 = int2base(a, n, 4)
+                    x1, y1 = rot_xy(x1, y1, n, k)
+                    x2, y2 = rot_xy(x2, y2, n, k)
                     if flip:
-                        x1 = n-1-x1; x2 = n-1-x2
-                    new[base2int([x1,y1,x2,y2], n)] += p
+                        x1 = n - 1 - x1
+                        x2 = n - 1 - x2
+                    new[base2int([x1, y1, x2, y2], n)] += p
+
                 out.append((img, new))
         return out
-
-
+        '''
             #return [(board,pi)]
         # mirror, rotational
         #assert(len(pi) == self.n**4)  
