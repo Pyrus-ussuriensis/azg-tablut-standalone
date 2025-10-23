@@ -1,7 +1,7 @@
-from Coach import Coach
-from tafl.TaflGame import TaflGame as Game
-from tafl.pytorch.NNet import NNetWrapper as nn
-from utils import *
+from tablut.Coach import Coach
+from tablut.rules.TaflGame import TaflGame as Game
+from tablut.models.NNet import NNetWrapper as nn
+from tablut.utils.utils import *
 
 args = dotdict({
     'numIters': 1000,
@@ -22,6 +22,7 @@ args = dotdict({
 
 if __name__=="__main__":
     g = Game("Tablut")
+    #g = Game(6)
     nnet = nn(g)
 
     if args.load_model:

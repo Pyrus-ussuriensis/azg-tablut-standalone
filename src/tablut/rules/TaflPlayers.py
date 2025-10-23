@@ -1,5 +1,5 @@
 import numpy as np
-from .Digits import int2base
+from tablut.utils.Digits import int2base
 
 class RandomTaflPlayer():
     def __init__(self, game):

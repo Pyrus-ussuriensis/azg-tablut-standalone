@@ -37,6 +37,9 @@ def int2base(x, base, length):
         raise ValueError("x >= base**length")
     return out  # [d0,d1,d2,d3] = [x1,y1,x2,y2]
 
+def base2int(move, n):
+    x1, y1, x2, y2 = move
+    return x1+y1*n+x2*n**2+y2*n**3
     
 
 def test():

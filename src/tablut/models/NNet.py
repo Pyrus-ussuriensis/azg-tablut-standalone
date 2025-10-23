@@ -5,10 +5,10 @@ import time
 import numpy as np
 from tqdm import tqdm
 
-sys.path.append('../../')
-from utils import *
+#sys.path.append('../../')
+from tablut.utils.utils import *
 
-from NeuralNet import NeuralNet
+from tablut.father_class.NeuralNet import NeuralNet
 
 import torch
 import torch.optim as optim

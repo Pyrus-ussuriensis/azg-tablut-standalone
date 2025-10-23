@@ -1,5 +1,5 @@
 import numpy as np
-from .GameVariants import Tafl
+from tablut.rules.GameVariants import Tafl
 
 class Board():
 
@@ -180,14 +180,15 @@ class Board():
 
 
     def _getWinLose(self):
-       if self.time > 50: return -1
-       for apiece in self.pieces:
-           if apiece[2]==2 and apiece[0] > -1:
-               for item in self.board:
-                 if item[0]==apiece[0] and item[1]==apiece[1] and item[2]==1:
-                     return 1 #white won
-               return 0 # no winner
-       return -1  #white lost
+        if self.time > 50: return -1
+        w = self.width - 1
+        for apiece in self.pieces:
+            if apiece[2]==2 and apiece[0] > -1:
+                # 修改为到达边沿后取胜
+                if apiece[0] in {0, w} or apiece[1] in {0, w}:
+                    return 1 #white won
+                return 0 # no winner
+        return -1  #white lost
    
     def _getPieceNo(self,x,y):
         # 返回棋子序号

@@ -1,11 +1,14 @@
 from __future__ import print_function
 import sys
-sys.path.append('..')
-from Game import Game
-from .TaflLogic import Board
+#sys.path.append('..')
+from tablut.father_class.Game import Game
+from tablut.rules.TaflLogic import Board
 import numpy as np
-from .GameVariants import *
-from .Digits import int2base
+from tablut.rules.GameVariants import *
+from tablut.utils.Digits import int2base, base2int
+from tablut.utils.utils import *
+
+
 
 class TaflGame(Game):
 
@@ -51,7 +54,7 @@ class TaflGame(Game):
             valids[-1]=1
             return np.array(valids)
         for x1, y1, x2, y2 in legalMoves:
-            valids[x1+y1*self.n+x2*self.n**2+y2*self.n**3]=1
+            valids[base2int([x1, y1, x2, y2], self.n)]=1
         return np.array(valids)
 
     def getGameEnded(self, board, player):
@@ -64,7 +67,28 @@ class TaflGame(Game):
         return b
 
     def getSymmetries(self, board, pi):
-        return [(board,pi)]
+        n = self.n
+        pi = np.asarray(pi, dtype=np.float32)
+        out = []
+        for k in range(4):
+            r = np.rot90(board, k) 
+            for flip in (0, 1):
+                img = np.fliplr(r) if flip else r
+                new = np.zeros_like(pi)
+                for a, p in enumerate(pi):
+                    if a == n**4 - 1:  # pass
+                        new[a] += p; continue
+                    x1,y1,x2,y2 = int2base(a, n, 4)
+                    x1,y1 = rot_xy(x1, y1, n, k)
+                    x2,y2 = rot_xy(x2, y2, n, k)
+                    if flip:
+                        x1 = n-1-x1; x2 = n-1-x2
+                    new[base2int([x1,y1,x2,y2], n)] += p
+                out.append((img, new))
+        return out
+
+
+            #return [(board,pi)]
         # mirror, rotational
         #assert(len(pi) == self.n**4)  
         #pi_board = np.reshape(pi[:-1], (self.n, self.n))
