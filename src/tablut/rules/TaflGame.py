@@ -65,7 +65,9 @@ class TaflGame(Game):
         b = board.getCopy()
         # rules and objectives are different for the different players, so inverting board results in an invalid state.
         return b
-
+    
+    # 存储时数据增强
+    '''
     def getSymmetries(self, board, pi):
         n = self.n
         if hasattr(board, "astype"):
@@ -86,47 +88,10 @@ class TaflGame(Game):
                 new = pi[perms[s]]           # O(n^4) 的一次性重排
                 out.append((img, new))
         return out
-    #def getSymmetries(self, board, pi):
-        #return [(board,pi)]
-        '''
-        n = self.n
+    '''
+    def getSymmetries(self, board, pi):
+        return [(board,pi)]
 
-        # 1) board -> 数值图像 (H,W)
-        if hasattr(board, "astype"):          # 你的 Board 定义了 astype(t) -> np.array(getImage()).astype(t)
-            base = board.astype(np.int8)
-        elif hasattr(board, "getImage"):
-            base = np.asarray(board.getImage(), dtype=np.int8)
-        else:
-            base = np.asarray(board, dtype=np.int8)
-            if base.ndim == 0:
-                raise TypeError("getSymmetries expected array-like board; got scalar/object.")
-
-        # 2) π -> ndarray
-        pi = np.asarray(pi, dtype=np.float32)
-
-        out = []
-        for k in range(4):                     # 0/90/180/270
-            r = np.rot90(base, k)              # 不要直接在 base 上翻
-            for flip in (0, 1):
-                img = np.fliplr(r) if flip else r
-                new = np.zeros_like(pi)
-
-                for a, p in enumerate(pi):
-                    if a == n**4 - 1:          # pass 槽位不动
-                        new[a] += p
-                        continue
-                    x1, y1, x2, y2 = int2base(a, n, 4)
-                    x1, y1 = rot_xy(x1, y1, n, k)
-                    x2, y2 = rot_xy(x2, y2, n, k)
-                    if flip:
-                        x1 = n - 1 - x1
-                        x2 = n - 1 - x2
-                    new[base2int([x1, y1, x2, y2], n)] += p
-
-                out.append((img, new))
-        return out
-        '''
-            #return [(board,pi)]
         # mirror, rotational
         #assert(len(pi) == self.n**4)  
         #pi_board = np.reshape(pi[:-1], (self.n, self.n))

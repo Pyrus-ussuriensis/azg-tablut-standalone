@@ -57,9 +57,11 @@ class Coach():
             temp = int(episodeStep < self.args.tempThreshold)
 
             pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
-            sym = self.game.getSymmetries(canonicalBoard, pi)
-            for b, p in sym: # board, pi
-                trainExamples.append([b.astype(np.float32), self.curPlayer, p, None]) # 添加了从board到矩阵的转化，是否数据能够被网络处理
+            #sym = self.game.getSymmetries(canonicalBoard, pi)
+            #for b, p in sym: # board, pi
+            #    trainExamples.append([b.astype(np.float32), self.curPlayer, p, None]) # 添加了从board到矩阵的转化，是否数据能够被网络处理
+            trainExamples.append([canonicalBoard.astype(np.float32), self.curPlayer, pi, None]) # 添加了从board到矩阵的转化，是否数据能够被网络处理
+
 
             action = np.random.choice(len(pi), p=pi)
             board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
