@@ -1,9 +1,10 @@
-import logging
 import os
 import sys
 from collections import deque
 from pickle import Pickler, Unpickler
 from random import shuffle
+
+import torch, random
 
 import numpy as np
 from tqdm import tqdm
@@ -11,8 +12,7 @@ from tqdm import tqdm
 from tablut.Arena import Arena
 from tablut.models.MCTS import MCTS
 
-log = logging.getLogger(__name__)
-
+from tablut.utils.log import logger, writer
 
 class Coach():
     """
@@ -28,6 +28,8 @@ class Coach():
         self.mcts = MCTS(self.game, self.nnet, self.args)
         self.trainExamplesHistory = []  # history of examples from args.numItersForTrainExamplesHistory latest iterations
         self.skipFirstSelfPlay = False  # can be overriden in loadTrainExamples()
+        self.start = 1 # 默认初始化为1，但是加载是会加载到上次
+        self.meta = None
 
     # 控制训练，输出训练的记录用于训练
     def executeEpisode(self):
@@ -81,9 +83,10 @@ class Coach():
         only if it wins >= updateThreshold fraction of games.
         """
 
-        for i in range(1, self.args.numIters + 1):
+
+        for i in range(self.start, self.args.numIters + 1):
             # bookkeeping
-            log.info(f'Starting Iter #{i} ...')
+            logger.info(f'Starting Iter #{i} ...')
             # examples of the iteration
             if not self.skipFirstSelfPlay or i > 1:
                 iterationTrainExamples = deque([], maxlen=self.args.maxlenOfQueue)
@@ -96,7 +99,7 @@ class Coach():
                 self.trainExamplesHistory.append(iterationTrainExamples)
 
             if len(self.trainExamplesHistory) > self.args.numItersForTrainExamplesHistory:
-                log.warning(
+                logger.warning(
                     f"Removing the oldest entry in trainExamples. len(trainExamplesHistory) = {len(self.trainExamplesHistory)}")
                 self.trainExamplesHistory.pop(0)
             # backup history to a file
@@ -117,19 +120,27 @@ class Coach():
             self.nnet.train(trainExamples)
             nmcts = MCTS(self.game, self.nnet, self.args)
 
-            log.info('PITTING AGAINST PREVIOUS VERSION')
+            logger.info('PITTING AGAINST PREVIOUS VERSION')
             arena = Arena(lambda x: np.argmax(pmcts.getActionProb(x, temp=0)),
                           lambda x: np.argmax(nmcts.getActionProb(x, temp=0)), self.game)
             pwins, nwins, draws = arena.playGames(self.args.arenaCompare)
 
-            log.info('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
-            if pwins + nwins == 0 or float(nwins) / (pwins + nwins) < self.args.updateThreshold:
-                log.info('REJECTING NEW MODEL')
+            logger.info('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
+
+            # Tensorboard记录得分率和胜率
+            score_rate = float(nwins+draws/2)/(self.args.arenaCompare)            
+            writer.add_scalar("score_rate", score_rate, i)
+            win_rate = float(nwins) / (pwins + nwins) if (pwins+nwins) > 0 else float('nan')
+            writer.add_scalar("win_rate", win_rate, i)
+
+            if pwins + nwins == 0 or win_rate < self.args.updateThreshold:
+                logger.info('REJECTING NEW MODEL')
                 self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.pth.tar')
             else:
-                log.info('ACCEPTING NEW MODEL')
+                logger.info('ACCEPTING NEW MODEL')
                 self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=self.getCheckpointFile(i))
                 self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='best.pth.tar')
+            self.save_iteration_checkpoints(i)
 
     def getCheckpointFile(self, iteration):
         return 'checkpoint_' + str(iteration) + '.pth.tar'
@@ -144,18 +155,38 @@ class Coach():
         f.closed
 
     def loadTrainExamples(self):
-        modelFile = os.path.join(self.args.load_folder_file[0], self.args.load_folder_file[1])
-        examplesFile = modelFile + ".examples"
+        #modelFile = os.path.join(self.args.load_folder_file[0], self.args.load_folder_file[1])
+        #examplesFile = modelFile + ".examples"
+        folder = self.args.checkpoint
+        if self.meta == None:
+            self.load_iteration_checkpoints()
+        examplesFile = os.path.join(folder, self.getCheckpointFile(self.meta['i']-1) + ".examples")
         if not os.path.isfile(examplesFile):
-            log.warning(f'File "{examplesFile}" with trainExamples not found!')
+            logger.warning(f'File "{examplesFile}" with trainExamples not found!')
             r = input("Continue? [y|n]")
             if r != "y":
                 sys.exit()
         else:
-            log.info("File with trainExamples found. Loading it...")
+            logger.info("File with trainExamples found. Loading it...")
             with open(examplesFile, "rb") as f:
                 self.trainExamplesHistory = Unpickler(f).load()
-            log.info('Loading done!')
+            logger.info('Loading done!')
 
             # examples based on the model were already collected (loaded)
             self.skipFirstSelfPlay = True
+
+
+    def save_iteration_checkpoints(self, i):
+        parameters = {
+            "i":i, # 当前轮数
+            "writer_path":writer.log_dir,
+        }
+        torch.save(parameters, os.path.join(self.args.checkpoint, "resume.pt"))
+    
+    def load_iteration_checkpoints(self):
+        meta = torch.load(os.path.join(self.args.checkpoint, "resume.pt"), map_location="cpu")
+        self.start = meta["i"] + 1
+        self.meta = meta
+        return meta
+
+

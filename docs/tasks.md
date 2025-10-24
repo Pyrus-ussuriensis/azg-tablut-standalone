@@ -1,14 +1,18 @@
 # tablut
-- [ ] stage 1
+- [x] stage 1
   - [x] 理解算法实现
   - [x] 整理游戏环境
   - [x] 测试环境*
-  - [ ] 测试冒烟跑通
+  - [x] 测试冒烟跑通
 - [ ] stage 2
-  - [ ] 手动做完整checkpoints*
-  - [ ] 做可视化和记录*
+  - [x] 手动做完整checkpoints*
+  - [x] 做可视化和记录*
+    - [x] log
+    - [x] 进度条
+    - [x] Tensorboard
   - [ ] 获取baseline，包括随机，手工特征一层贪心，alphabeta树*
   - [ ] 以alphabeta树为基线，测试其他方法得到分数绘图，利用Elo方法*
+  - [ ] 添加Elo到Tensorboard中*
   - [ ] 测试stage1中给出模型
 - [ ] stage 3
   - [ ] 阅读论文查看其他可能能够优化效果的部件*

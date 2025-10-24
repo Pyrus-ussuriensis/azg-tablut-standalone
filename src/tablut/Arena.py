@@ -1,8 +1,6 @@
-import logging
-
 from tqdm import tqdm
+from tablut.utils.log import logger
 
-log = logging.getLogger(__name__)
 
 
 class Arena():
@@ -58,8 +56,8 @@ class Arena():
             valids = self.game.getValidMoves(self.game.getCanonicalForm(board, curPlayer), 1)
 
             if valids[action] == 0:
-                log.error(f'Action {action} is not valid!')
-                log.debug(f'valids = {valids}')
+                logger.error(f'Action {action} is not valid!')
+                logger.debug(f'valids = {valids}')
                 assert valids[action] > 0
 
             # Notifying the opponent for the move
