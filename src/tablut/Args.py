@@ -1,5 +1,5 @@
 from tablut.utils.utils import *
-args0 = dotdict({
+args = dotdict({
     'numIters': 1000,
     'numEps': 100,
     'tempThreshold': 15,
@@ -17,14 +17,17 @@ args0 = dotdict({
 
 })
 
-args = dotdict({
+args1 = dotdict({
     'numIters': 60,
-    'numEps': 200,
+    'numEps': 80,
+    #'numEps': 200,
     'tempThreshold': 10,
     'updateThreshold': 0.58,
     'maxlenOfQueue': 200000,
-    'numMCTSSims': 200,
-    'arenaCompare': 200,
+    'numMCTSSims': 150,
+    #'numMCTSSims': 200,
+    'arenaCompare': 50,
+    #'arenaCompare': 200,
     'cpuct': 1.5,
 
     'checkpoint': './temp/',

@@ -15,12 +15,16 @@ use this script to play any two agents against each other, or play manually with
 any agent.
 """
 
-g = TaflGame("Brandubh")
+g = TaflGame("Tablut")
 
 # all players
 rp = RandomTaflPlayer(g).play
 gp = GreedyTaflPlayer(g).play
 hp = HumanTaflPlayer(g).play
+
+from tablut.baselines.alphabeta_player import AlphaBetaTaflPlayer
+from tablut.baselines.greedy_player import GreedyTaflPlayer
+from tablut.baselines.random_player import RandomPlayer
 
 # nnet players
 #n1 = NNet(g)
@@ -28,8 +32,18 @@ hp = HumanTaflPlayer(g).play
 #args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0})
 #mcts1 = MCTS(g, n1, args1)
 #n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
+a, b, c = AlphaBetaTaflPlayer(g,2), GreedyTaflPlayer(g), RandomPlayer(g)
 
+#arena = Arena.Arena(a, c, g, display=display)
+arena = Arena.Arena(a, b, g)
 
-arena = Arena.Arena(hp, gp, g, display=display)
+n = 10
+#arena = Arena.Arena(a, b, g, display=display)
+print(arena.playGames(n, verbose=False))
+#print(arena.playGames(100, verbose=True))
+arena = Arena.Arena(a, c, g)
 #arena = Arena.Arena(gp, rp, g, display=display)
-print(arena.playGames(2, verbose=True))
+print(arena.playGames(n, verbose=False))
+arena = Arena.Arena(b, c, g)
+print(arena.playGames(n, verbose=False))
+#print(arena.playGames(100, verbose=True))

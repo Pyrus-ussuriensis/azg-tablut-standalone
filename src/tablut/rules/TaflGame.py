@@ -51,7 +51,7 @@ class TaflGame(Game):
         b = board.getCopy()
         legalMoves =  b.get_legal_moves(board.getPlayerToMove())
         if len(legalMoves)==0:
-            valids[-1]=1
+            #valids[-1]=1
             return np.array(valids)
         for x1, y1, x2, y2 in legalMoves:
             valids[base2int([x1, y1, x2, y2], self.n)]=1
@@ -59,10 +59,17 @@ class TaflGame(Game):
 
     def getGameEnded(self, board, player):
         # return 0 if not ended, if player 1 won, -1 if player 1 lost
+        # 无步可走则当前行动方判负
+        cur = board.getPlayerToMove()
+        if not board.has_legal_moves(cur):
+            return 1 if cur != player else -1
+        # 其余终局：以传入 player 为参照（+1/-1/0）
         return board.done*player
 
     def getCanonicalForm(self, board, player):
         b = board.getCopy()
+        b._canon_flip = (player == -1)
+        b._canon_flip_king = True 
         # rules and objectives are different for the different players, so inverting board results in an invalid state.
         return b
     
@@ -117,6 +124,7 @@ class TaflGame(Game):
 
 
 
+'''
 def display(board):
        render_chars = {
              "-1": "b",
@@ -142,5 +150,38 @@ def display(board):
            print(" ") 
        #if (board.done!=0): print("***** Done: ",board.done)  
        print("---------------------")
+'''
+
+# ANSI 颜色；需要的话 pip install colorama 并在 Windows cmd 调用 init()
+RESET = "\x1b[0m"
+FGW, FGB, FGK = "\x1b[97m", "\x1b[30m", "\x1b[93m"  # 白/黑/王
+BGCOR, BGTHR = "\x1b[48;5;239m", "\x1b[48;5;237m"   # 角/王座背景
+BGOFF = "\x1b[49m"
+
+def cell_str(v):
+    # 背景先画地形，再叠加棋子颜色
+    bg = BGOFF
+    if v in (10, 12): bg = BGCOR
+    if v in (20, 22): bg = BGTHR
+    if v == -1:  return f"{bg}{FGB}●{RESET}"
+    if v ==  1:  return f"{bg}{FGW}○{RESET}"
+    if v ==  2:  return f"{bg}{FGK}♔{RESET}"
+    if v == -2:  return f"{bg}{FGK}♔{RESET}"
+    if v == 12:  return f"{bg}{FGK}♔{RESET}"
+    if v == 22:  return f"{bg}{FGK}♔{RESET}"
+    if v == 10:  return f"{bg}▦{RESET}"
+    if v == 20:  return f"{bg}▣{RESET}"
+    return f"{bg}·{RESET}"
+
+def display(board):
+    img = board.getImage()
+    n = len(img)
+    print("   " + "".join(f"{i:2d}" for i in range(n)))
+    print("   ┌" + "─" * (2*n-1) + "┐")
+    for r in range(n-1, -1, -1):
+        row = " ".join(f"{cell_str(img[r][c]):2s}" for c in range(n))
+        print(f"{r:2d} │{row}│")
+    print("   └" + "─" * (2*n-1) + "┘")
+
 
 

@@ -49,7 +49,7 @@ class GreedyTaflPlayer():
             if valids[a]==0:
                 continue
             nextBoard, _ = self.game.getNextState(board, board.getPlayerToMove(), a)
-            score = self.game.getScore(nextBoard, board.getPlayerToMove())
+            score = self.game.getScore(nextBoard, board.getPlayerToMove()) # 观察能一步结束的棋
             candidates += [(-score, a)]
         candidates.sort()
         return candidates[0][1]

@@ -67,3 +67,6 @@
 
 ## game rules test
 利用pytest进行简单的情况的测试
+
+## optimize checkpoints, log and add tensorboard
+对于一些重要参数在Coach上写函数进行了保存，比如当前的总循环次数，Tensorboard保存的位置，这样能够恢复Tensorboard和显示的次数。log是改为统一使用自己的logger，在utils.log中。Tensorboard暂时仅仅记录训练时新旧模型的胜负信息。

@@ -5,13 +5,15 @@ class Board():
 
 
     def __init__(self, gv):
-      self.size=gv.size  
-      self.width=gv.size
-      self.height=gv.size
-      self.board=gv.board #[x,y,type]
-      self.pieces=gv.pieces #[x,y,type]
-      self.time=0
-      self.done=0
+        self.size=gv.size  
+        self.width=gv.size
+        self.height=gv.size
+        self.board=gv.board #[x,y,type]
+        self.pieces=gv.pieces #[x,y,type]
+        self.time=0
+        self.done=0
+        self._canon_flip = False        # 是否翻转（攻方视角）
+        self._canon_flip_king = True    # 翻不翻王：True/False
 
     def __str__(self):
         img = self.getImage()
@@ -33,6 +35,8 @@ class Board():
       b = Board(gv)
       b.time=self.time
       b.done=self.done
+      b._canon_flip=self._canon_flip
+      b._canon_flip_king=self._canon_flip_king
       return b
 
 
@@ -73,6 +77,7 @@ class Board():
         #else:
            #print("Illegal move:",move,legal)
    
+    '''
     def getImage(self):
         image = [[0 for col in range(self.width)] for row in range(self.height)]
         for item in self.board:
@@ -80,6 +85,31 @@ class Board():
         for piece in self.pieces:
             if piece[0] >= 0: image[piece[1]][piece[0]] = piece[2] + image[piece[1]][piece[0]]
         return image
+    '''
+
+    # TaflLogic.py
+    def getImage(self):
+        image = [[0 for _ in range(self.width)] for _ in range(self.height)]
+        # 地形：角/王座保持不变
+        for x, y, typ in self.board:
+            image[y][x] = typ * 10
+
+        flip = bool(getattr(self, "_canon_flip", False))
+        sign = -1 if flip else 1
+        flip_king = bool(getattr(self, "_canon_flip_king", True))
+
+        for x, y, typ in self.pieces:
+            if x < 0: 
+                continue
+            v = typ
+            if sign == -1:               # 攻方视角：符号取反
+                if v in (-1, 1):
+                    v = -v
+                elif v == 2 and flip_king:
+                    v = -2
+            image[y][x] += v
+        return image
+
 
     def getPlayerToMove(self):
         return -(self.time%2*2-1)

@@ -11,6 +11,7 @@ from tqdm import tqdm
 
 from tablut.Arena import Arena
 from tablut.models.MCTS import MCTS
+from tablut.models.Players import MCTSPlayer
 
 from tablut.utils.log import logger, writer
 
@@ -115,14 +116,17 @@ class Coach():
             # training new network, keeping a copy of the old one
             self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='temp.pth.tar')
             self.pnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.pth.tar')
-            pmcts = MCTS(self.game, self.pnet, self.args)
+            #pmcts = MCTS(self.game, self.pnet, self.args)
 
             self.nnet.train(trainExamples)
-            nmcts = MCTS(self.game, self.nnet, self.args)
+            #nmcts = MCTS(self.game, self.nnet, self.args)
+            pmcts_player = MCTSPlayer(self.game, self.pnet, self.args, temp=0)
+            nmcts_player = MCTSPlayer(self.game, self.nnet, self.args, temp=0)
 
             logger.info('PITTING AGAINST PREVIOUS VERSION')
-            arena = Arena(lambda x: np.argmax(pmcts.getActionProb(x, temp=0)),
-                          lambda x: np.argmax(nmcts.getActionProb(x, temp=0)), self.game)
+            arena = Arena(pmcts_player, nmcts_player, self.game)
+            #arena = Arena(lambda x: np.argmax(pmcts.getActionProb(x, temp=0)),
+            #              lambda x: np.argmax(nmcts.getActionProb(x, temp=0)), self.game)
             pwins, nwins, draws = arena.playGames(self.args.arenaCompare)
 
             logger.info('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
