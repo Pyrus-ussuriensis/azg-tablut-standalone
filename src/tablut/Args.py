@@ -1,5 +1,5 @@
 from tablut.utils.utils import *
-args = dotdict({
+args0 = dotdict({
     'numIters': 1000,
     'numEps': 100,
     'tempThreshold': 15,
@@ -17,7 +17,7 @@ args = dotdict({
 
 })
 
-args1 = dotdict({
+args = dotdict({
     'numIters': 60,
     'numEps': 80,
     #'numEps': 200,

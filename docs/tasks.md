@@ -10,7 +10,7 @@
     - [x] log
     - [x] 进度条
     - [x] Tensorboard
-  - [ ] 获取baseline，包括随机，手工特征一层贪心，alphabeta树*
+  - [x] 获取baseline，包括随机，手工特征一层贪心，alphabeta树*
   - [ ] 以alphabeta树为基线，测试其他方法得到分数绘图，利用Elo方法*
   - [ ] 添加Elo到Tensorboard中*
   - [ ] 测试stage1中给出模型

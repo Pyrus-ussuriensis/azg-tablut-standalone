@@ -4,7 +4,7 @@
 from tablut import Arena
 from tablut.models.MCTS import MCTS
 from tablut.rules.TaflGame import TaflGame, display
-from tablut.rules.TaflPlayers import *
+from tablut.baselines.TaflPlayers import *
 #from tafl.keras.NNet import NNetWrapper as NNet
 
 import numpy as np
@@ -34,16 +34,17 @@ from tablut.baselines.random_player import RandomPlayer
 #n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 a, b, c = AlphaBetaTaflPlayer(g,2), GreedyTaflPlayer(g), RandomPlayer(g)
 
-#arena = Arena.Arena(a, c, g, display=display)
-arena = Arena.Arena(a, b, g)
-
-n = 10
 #arena = Arena.Arena(a, b, g, display=display)
-print(arena.playGames(n, verbose=False))
-#print(arena.playGames(100, verbose=True))
-arena = Arena.Arena(a, c, g)
-#arena = Arena.Arena(gp, rp, g, display=display)
-print(arena.playGames(n, verbose=False))
-arena = Arena.Arena(b, c, g)
-print(arena.playGames(n, verbose=False))
-#print(arena.playGames(100, verbose=True))
+
+#print(arena.playGames(2, verbose=True))
+
+n = 100
+def test_model(a, b, c, g, n): # 让a和b,c在g上处理n次
+    arena = Arena.Arena(a, b, g)
+    print(arena.playGames(n, verbose=False))
+    arena = Arena.Arena(a, c, g)
+    print(arena.playGames(n, verbose=False))
+    arena = Arena.Arena(b, c, g)
+    print(arena.playGames(n, verbose=False))
+
+test_model(a,gp,c,g,n)

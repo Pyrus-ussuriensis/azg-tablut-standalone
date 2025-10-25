@@ -209,7 +209,7 @@ class Board():
         
 
 
-    def _getWinLose(self):
+    def _getWinLose(self): # 胜负结果以白的视角给
         if self.time > 50: return -1
         w = self.width - 1
         for apiece in self.pieces:
@@ -231,9 +231,9 @@ class Board():
        moves=[]
        for pieceno in range(len(self.pieces)):
            piece=self.pieces[pieceno]
-           if piece[2]*player > 0:
+           if piece[2]*player > 0: # 相同阵营
               #print("checking pieceno ",pieceno,piece)
-              for x in range(0,self.width):
+              for x in range(0,self.width): # 在两条直线上实验
                   if self._isLegalMove(pieceno,x,piece[1])>=0:moves.extend([[piece[0],piece[1],x,piece[1]]])
               for y in range(0,self.height):
                   if self._isLegalMove(pieceno,piece[0],y)>=0:moves.extend([[piece[0],piece[1],piece[0],y]])

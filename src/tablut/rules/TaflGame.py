@@ -64,7 +64,7 @@ class TaflGame(Game):
         if not board.has_legal_moves(cur):
             return 1 if cur != player else -1
         # 其余终局：以传入 player 为参照（+1/-1/0）
-        return board.done*player
+        return board.done*player # 胜负值以白的视角给，所以进行转换
 
     def getCanonicalForm(self, board, player):
         b = board.getCopy()
@@ -169,6 +169,8 @@ def cell_str(v):
     if v == -2:  return f"{bg}{FGK}♔{RESET}"
     if v == 12:  return f"{bg}{FGK}♔{RESET}"
     if v == 22:  return f"{bg}{FGK}♔{RESET}"
+    if v ==  8:  return f"{bg}{FGK}♔{RESET}"
+    if v == 18:  return f"{bg}{FGK}♔{RESET}"
     if v == 10:  return f"{bg}▦{RESET}"
     if v == 20:  return f"{bg}▣{RESET}"
     return f"{bg}·{RESET}"

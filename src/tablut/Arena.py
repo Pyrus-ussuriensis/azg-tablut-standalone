@@ -54,7 +54,7 @@ class Arena():
             board = self.game.getCanonicalForm(board, curPlayer)
             
             action = players[curPlayer + 1](board)
-            board = self.game.getCanonicalForm(board, curPlayer)
+            #board = self.game.getCanonicalForm(board, curPlayer)
             valids = self.game.getValidMoves(board, 1)
 
             if valids[action] == 0:
@@ -77,7 +77,7 @@ class Arena():
             assert self.display
             print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
             self.display(board)
-        return curPlayer * self.game.getGameEnded(board, curPlayer)
+        return curPlayer * self.game.getGameEnded(board, curPlayer) # 总是以白方的视角记录结果
 
     # 按照给的盘数，跑一半，交换棋子，跑另一半，返回最终记录的值
     def playGames(self, num, verbose=False):
@@ -95,14 +95,21 @@ class Arena():
         oneWon = 0
         twoWon = 0
         draws = 0
+        t1, t2, t3 = 0, 0, 0
         for _ in tqdm(range(num), desc="Arena.playGames (1)"):
             gameResult = self.playGame(verbose=verbose)
             if gameResult == 1:
                 oneWon += 1
+                t1+=1
             elif gameResult == -1:
                 twoWon += 1
+                t2+=1
             else:
                 draws += 1
+                t3+=1
+        print(f"1w,2w,3e, {t1}, {t2}, {t3}")
+        t1, t2, t3 = 0, 0, 0
+        
 
         self.player1, self.player2 = self.player2, self.player1
 
@@ -110,9 +117,13 @@ class Arena():
             gameResult = self.playGame(verbose=verbose)
             if gameResult == -1:
                 oneWon += 1
+                t1+=1
             elif gameResult == 1:
                 twoWon += 1
+                t2+=1
             else:
                 draws += 1
+                t3+=1
+        print(f"1w,2w,3e, {t1}, {t2}, {t3}")
 
         return oneWon, twoWon, draws

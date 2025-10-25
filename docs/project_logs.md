@@ -70,3 +70,10 @@
 
 ## optimize checkpoints, log and add tensorboard
 对于一些重要参数在Coach上写函数进行了保存，比如当前的总循环次数，Tensorboard保存的位置，这样能够恢复Tensorboard和显示的次数。log是改为统一使用自己的logger，在utils.log中。Tensorboard暂时仅仅记录训练时新旧模型的胜负信息。
+
+## fix bugs about view changes and change endgame rules
+原始项目没有实现视角转换，实际MCTS和网络得到的信息在不同方都是相同的，但是实际可以走的又是不同的，所以难以提供正确的建议。如果直接修改board底层的数值可能会影响到规则的判断，比如如果将对手视为负数，那么如果为攻方，将王视为负数，则会导致之前规则的判断第三位为2的规则出错，方便起见修改getImage是比较合适的，可以同时影响MCTS和网络能够得到的信息，我们根据一个标记在获取图的时候相应的变更棋子的值。
+原始项目在没有合法走法时是直接取最后一种走法，我们修改为直接判无法走的一方负。
+
+## finish random, greedy and alpha-beta agents
+提供了三个模型作为baselines，其中alpha-beta模型将作为基准算模型的Elo分数。

@@ -1247,3 +1247,294 @@ current configuration
  'tempThreshold': 15,
  'updateThreshold': 0.6}
 start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+current configuration
+{'arenaCompare': 40,
+ 'checkpoint': './temp/',
+ 'cpuct': 1,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 100,
+ 'numIters': 1000,
+ 'numItersForTrainExamplesHistory': 20,
+ 'numMCTSSims': 25,
+ 'tempThreshold': 15,
+ 'updateThreshold': 0.6}
+start training
+Starting Iter #1 ...
+PITTING AGAINST PREVIOUS VERSION
+NEW/PREV WINS : 19 / 21 ; DRAWS : 0
+REJECTING NEW MODEL
+Starting Iter #2 ...
+current configuration
+{'arenaCompare': 50,
+ 'checkpoint': './temp/',
+ 'cpuct': 1.5,
+ 'experiment': 0,
+ 'load_folder_file': 'best.pth.tar',
+ 'load_model': False,
+ 'maxlenOfQueue': 200000,
+ 'numEps': 80,
+ 'numIters': 60,
+ 'numItersForTrainExamplesHistory': 10,
+ 'numMCTSSims': 150,
+ 'tempThreshold': 10,
+ 'updateThreshold': 0.58}
+start training
+Starting Iter #1 ...
