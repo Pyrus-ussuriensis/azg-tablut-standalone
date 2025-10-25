@@ -5,6 +5,9 @@ from tablut import Arena
 from tablut.models.MCTS import MCTS
 from tablut.rules.TaflGame import TaflGame, display
 from tablut.baselines.TaflPlayers import *
+from tablut.models.Players import MCTSPlayer
+from tablut.models.NNet import NNetWrapper as nn
+from tablut.Args import args
 #from tafl.keras.NNet import NNetWrapper as NNet
 
 import numpy as np
@@ -37,8 +40,10 @@ a, b, c = AlphaBetaTaflPlayer(g,2), GreedyTaflPlayer(g), RandomPlayer(g)
 #arena = Arena.Arena(a, b, g, display=display)
 
 #print(arena.playGames(2, verbose=True))
+nnet = nn(g)
+pmcts_player = MCTSPlayer(g, nnet, args, temp=0)
 
-n = 100
+n = 10
 def test_model(a, b, c, g, n): # 让a和b,c在g上处理n次
     arena = Arena.Arena(a, b, g)
     print(arena.playGames(n, verbose=False))
@@ -47,4 +52,8 @@ def test_model(a, b, c, g, n): # 让a和b,c在g上处理n次
     arena = Arena.Arena(b, c, g)
     print(arena.playGames(n, verbose=False))
 
-test_model(a,gp,c,g,n)
+#test_model(a,b,c,g,n)
+from tablut.baselines.Elo_Cal import Evaluate_Model_with_Alpha_Beta
+#print(Evaluate_Model_with_Alpha_Beta(new_model=a, g=g))
+print(Evaluate_Model_with_Alpha_Beta(new_model=b, g=g))
+print(Evaluate_Model_with_Alpha_Beta(new_model=c, g=g))

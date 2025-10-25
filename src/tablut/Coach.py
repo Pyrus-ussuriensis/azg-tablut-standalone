@@ -12,7 +12,7 @@ from tqdm import tqdm
 from tablut.Arena import Arena
 from tablut.models.MCTS import MCTS
 from tablut.models.Players import MCTSPlayer
-
+from tablut.baselines.Elo_Cal import Evaluate_Model_with_Alpha_Beta
 from tablut.utils.log import logger, writer
 
 class Coach():
@@ -136,6 +136,7 @@ class Coach():
             writer.add_scalar("score_rate", score_rate, i)
             win_rate = float(nwins) / (pwins + nwins) if (pwins+nwins) > 0 else float('nan')
             writer.add_scalar("win_rate", win_rate, i)
+            Evaluate_Model_with_Alpha_Beta(new_model=nmcts_player, g=self.game, step=i, write=True)
 
             if pwins + nwins == 0 or win_rate < self.args.updateThreshold:
                 logger.info('REJECTING NEW MODEL')
