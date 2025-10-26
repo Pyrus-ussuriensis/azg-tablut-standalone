@@ -76,7 +76,7 @@ args3 = dotdict({
     'evaluate': 128
 })
 
-args = dotdict({
+args4 = dotdict({
     # —— 迭代与数据 —— #
     'numIters': 300,
     'numEps': 128,                  # ↑ 自博弈局数：直接抬高训练时长与数据量
@@ -115,4 +115,97 @@ args = dotdict({
     'load_folder_file': 'best.pth.tar',
     'experiment': 0,
     'in_planes': 6,
+})
+
+args5 = dotdict({
+    # 迭代与数据
+    'numIters': 400,
+    'numEps': 64,
+    'numItersForTrainExamplesHistory': 10,
+    'maxlenOfQueue': 200000,
+
+    # MCTS
+    'numMCTSSims': 64,        # 阶段A手动设32；阶段B及后 64
+    'cpuct': 1.5,
+    'tempThreshold': 10,
+
+    # 评测/门控
+    'arenaCompare': 64,       # 快筛
+    'evaluate': 128,          # 确认赛（通过快筛才打）
+    'updateThreshold': 0.55,  # 分段：A=0.52, B=0.55, C=0.58
+
+    # 模型/存档
+    'checkpoint': './temp/',
+    'load_model': False,
+    'load_folder_file': 'best.pth.tar',
+    'experiment': 0,
+
+    # —— 建议新增的开关（在 Coach/MCTS 里读到就生效）——
+    'dirichlet_alpha': 0.25,      # 根注噪
+    'dirichlet_eps': 0.25,
+    'playout_cap': [32,64,96],    # A 阶段用 [16,32,64]
+    'resign_enable_after': 5,
+    'resign_threshold': -0.85,
+    'ema_decay': 0.999,           # 若实现了EMA，用其做评测
+    'disable_dirichlet_in_eval': True,
+    'eval_temperature_zero': True,
+})
+
+
+# 测试跑通使用：
+args6 = dotdict({
+    # 迭代与数据
+    'numIters': 400,
+    'numEps': 100,
+    'numItersForTrainExamplesHistory': 10,
+    'maxlenOfQueue': 200000,
+
+    # MCTS
+    'numMCTSSims':100,        # 阶段A手动设32；阶段B及后 64
+    'cpuct': 1.5,
+    'tempThreshold': 10,
+
+    # 评测/门控
+    'arenaCompare': 50,       # 快筛
+    'evaluate': 100,          # 确认赛（通过快筛才打）
+    'updateThreshold': 0.55,  # 分段：A=0.52, B=0.55, C=0.58
+
+    # 模型/存档
+    'checkpoint': './temp/',
+    'load_model': False,
+    'load_folder_file': 'best.pth.tar',
+    'experiment': 0,
+
+    # —— 建议新增的开关（在 Coach/MCTS 里读到就生效）——
+    'dirichlet_alpha': 0.25,      # 根注噪
+    'noise_eps': 0.25,
+})
+
+# 自博弈/评测&搜索
+args = dotdict({
+    # 迭代与数据 —— 维持即可
+    'numIters': 400,
+    'numEps': 100,
+    'numItersForTrainExamplesHistory': 10,
+    'maxlenOfQueue': 200000,
+
+    # MCTS
+    'numMCTSSims': 64,    # 训练64–96均可；原论文围棋1600/棋类800，此处按算力下调。:contentReference[oaicite:0]{index=0}
+    'cpuct': 1.5,         # 常用区间~1–2；文献/复现多用≈1.5。:contentReference[oaicite:1]{index=1}
+    'tempThreshold': 10,  # 先高温后降0；围棋~前30手，这里棋盘更小取~10。:contentReference[oaicite:2]{index=2}
+
+    # 评测/门控
+    'arenaCompare': 64,   # 偶数且≥64便于换边统计；DeepMind评测很多局，门槛≈55%。:contentReference[oaicite:3]{index=3}
+    'evaluate': 128,      # 确认赛更多局，降低方差。:contentReference[oaicite:4]{index=4}
+    'updateThreshold': 0.55,  # 经典门槛≈55%。:contentReference[oaicite:5]{index=5}
+
+    # 模型/存档
+    'checkpoint': './temp/',
+    'load_model': False,
+    'load_folder_file': 'best.pth.tar',
+    'experiment': 0,
+
+    # 根注噪（只用于自博弈）
+    'dirichlet_alpha': 0.15,  # 经验可按 α≈10/合法步数；Go用0.03(≈10/362)。:contentReference[oaicite:6]{index=6}
+    'noise_eps': 0.1,        # 论文/实现通用值。:contentReference[oaicite:7]{index=7}
 })

@@ -59,7 +59,15 @@ class Coach():
             canonicalBoard = self.game.getCanonicalForm(board, self.curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
 
+            valids = self.game.getValidMoves(canonicalBoard, 1).astype(np.float32)
             pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
+            pi = pi*valids
+            s = pi.sum()
+            if s>0:
+                pi = pi/s
+            else:
+                pi = valids/(valids.sum()+1e-8)
+
             #sym = self.game.getSymmetries(canonicalBoard, pi)
             #for b, p in sym: # board, pi
             #    trainExamples.append([b.astype(np.float32), self.curPlayer, p, None]) # 添加了从board到矩阵的转化，是否数据能够被网络处理
@@ -71,10 +79,10 @@ class Coach():
             action = np.random.choice(len(pi), p=pi)
             board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
 
-            r = self.game.getGameEnded(board, self.curPlayer)
+            r = self.game.getGameEnded(board, 1)
 
             if r != 0:
-                return [(x[0], x[2], r * ((-1) ** (x[1] != self.curPlayer)), x[3], x[4]) for x in trainExamples]
+                return [(x[0], x[2], r * (x[1]), x[3], x[4]) for x in trainExamples]
 
     # 总的学习流程，先训练，然后进行评估
     def learn(self):

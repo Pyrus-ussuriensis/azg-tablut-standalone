@@ -33,8 +33,30 @@ class MCTS():
             probs: a policy vector where the probability of the ith action is
                    proportional to Nsa[(s,a)]**(1./temp)
         """
+        #for i in range(self.args.numMCTSSims):
+        #    self.search(canonicalBoard)
+
+
+        root_s = self.game.stringRepresentation(canonicalBoard)
         for i in range(self.args.numMCTSSims):
             self.search(canonicalBoard)
+            # 在根扩展后（首轮）注入 Dirichlet 噪声，仅自博弈( temp>0 )使用
+            if (i == 0 and temp > 0 and
+                getattr(self.args, "noise_eps", 0) > 0 and
+                getattr(self.args, "dirichlet_alpha", 0) > 0 and
+                root_s in self.Ps):
+                valids = self.Vs[root_s].astype(np.bool_)
+                if valids.sum() > 0:
+                    eta = np.random.dirichlet([self.args.dirichlet_alpha] * int(valids.sum()))
+                    dir_full = np.zeros_like(self.Ps[root_s], dtype=np.float64)
+                    dir_full[valids] = eta
+                    eps = float(self.args.noise_eps)
+                    self.Ps[root_s] = (1.0 - eps) * self.Ps[root_s] + eps * dir_full
+                    ssum = np.sum(self.Ps[root_s])
+                    if ssum > 0:
+                        self.Ps[root_s] /= ssum
+
+
 
         s = self.game.stringRepresentation(canonicalBoard)
         counts = [self.Nsa[(s, a)] if (s, a) in self.Nsa else 0 for a in range(self.game.getActionSize())]

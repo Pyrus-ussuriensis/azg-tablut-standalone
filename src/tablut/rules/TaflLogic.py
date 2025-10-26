@@ -18,7 +18,8 @@ class Board():
     def __str__(self):
         img = self.getImage()
         flat = ''.join(str(r) for v in img for r in v)
-        return f"{self.getPlayerToMove()}|t{self.time}|d{self.done}|{flat}" # 增加了终局值，避免出现同样的局面因超时结束与没有超时的影响
+        #return f"{self.getPlayerToMove()}|t{self.time}|d{self.done}|{flat}" # 增加了终局值，避免出现同样的局面因超时结束与没有超时的影响
+        return f"{self.getPlayerToMove()}|d{self.done}|{flat}" # 增加了终局值，避免出现同样的局面因超时结束与没有超时的影响
 
     # add [][] indexer syntax to the Board
     def __getitem__(self, index): 

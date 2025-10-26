@@ -60,7 +60,7 @@ def action_perms(n: int) -> np.ndarray:
             new_idx = fx1 + ry1*n + fx2*(n**2) + ry2*(n**3)
             s = k*2 + flip
             perms[s] = new_idx
-            perms[s, -1] = n**4 - 1    
+            #perms[s, -1] = n**4 - 1    
     return perms
 
 def getNNImage(scalar, S, time):

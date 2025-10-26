@@ -11,9 +11,8 @@
     - [x] 进度条
     - [x] Tensorboard
   - [x] 获取baseline，包括随机，手工特征一层贪心，alphabeta树*
-  - [ ] 以alphabeta树为基线，测试其他方法得到分数绘图，利用Elo方法*
-  - [ ] 添加Elo到Tensorboard中*
-  - [ ] 测试stage1中给出模型
+  - [x] 以alphabeta树为基线，测试其他方法得到分数绘图，利用Elo方法*
+  - [x] 添加Elo到Tensorboard中*
 - [ ] stage 3
   - [ ] 阅读论文查看其他可能能够优化效果的部件*
   - [ ] 安装部件

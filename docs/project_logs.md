@@ -85,3 +85,10 @@
 
 ## modify model's input
 为了网络能够更好的学习，将原本的(B,1,W,H),手动拆解成(B,6,W,H),每一层包含着特定的信息，即，王座，棋子双方，王双方，剩余时间比例。然后修改相应的输入和网络架构以适应。
+
+## modify network, modify state key representation, add data's pi's valid mask, add root noise, fix bug about data's endgame value
+网络原本的pi头是从512输出到动作空间是6561，比较勉强，修改。
+删除对于当前步数的键值表示减少MCTS键值的稀疏性
+在计入训练数据前将pi用valid过滤一遍
+在MCTS的根部加上噪声
+训练数据的终局值可能视角有问题，修改
