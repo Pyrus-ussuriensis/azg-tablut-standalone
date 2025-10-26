@@ -2,6 +2,8 @@
 .DS_Store
 
 /temp/
+/tensorboard/
+/logs/
 /.project
 /.pydevproject
 /store/

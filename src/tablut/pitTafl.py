@@ -52,8 +52,8 @@ def test_model(a, b, c, g, n): # 让a和b,c在g上处理n次
     arena = Arena.Arena(b, c, g)
     print(arena.playGames(n, verbose=False))
 
-#test_model(a,b,c,g,n)
+test_model(a,b,c,g,n)
 from tablut.baselines.Elo_Cal import Evaluate_Model_with_Alpha_Beta
 #print(Evaluate_Model_with_Alpha_Beta(new_model=a, g=g))
-print(Evaluate_Model_with_Alpha_Beta(new_model=b, g=g))
-print(Evaluate_Model_with_Alpha_Beta(new_model=c, g=g))
+#print(Evaluate_Model_with_Alpha_Beta(new_model=b, g=g))
+#print(Evaluate_Model_with_Alpha_Beta(new_model=c, g=g))

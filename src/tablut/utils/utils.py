@@ -62,3 +62,52 @@ def action_perms(n: int) -> np.ndarray:
             perms[s] = new_idx
             perms[s, -1] = n**4 - 1    
     return perms
+
+def getNNImage(scalar, S, time):
+    """
+    返回 (C,H,W) float32，多平面语义图：
+    [my_pawn, opp_pawn, my_king, opp_king, throne, (extra terrains...), side, rem_to_limit]
+    约定：此函数在 **canonical 后的棋盘** 上调用（+1 为当前行动方）。
+    """
+    '''
+    H, W = self.height, self.width
+    # terrain*10 + piece 的“解码”
+    scalar = np.zeros((H, W), dtype=np.int16)
+    for x, y, typ in self.board:        # 地形编码（如 1=王座；可扩展）
+        scalar[y, x] = typ * 10
+
+    flip = bool(getattr(self, "_canon_flip", False))
+    sign = -1 if flip else 1
+    flip_king = bool(getattr(self, "_canon_flip_king", True))
+
+    for x, y, typ in self.pieces:
+        if x < 0:
+            continue
+        v = typ
+        if sign == -1:
+            if v in (-1, 1):
+                v = -v
+            elif v == 2 and flip_king:
+                v = -2
+        scalar[y, x] += v
+    '''
+    H, W = S, S
+
+    terrain = scalar // 10
+    piece   = scalar - terrain * 10
+
+    my_pawn  = (piece == +1).astype(np.float32)
+    opp_pawn = (piece == -1).astype(np.float32)
+    my_king  = (piece == +2).astype(np.float32)
+    opp_king = (piece == -2).astype(np.float32)
+    throne   = (terrain == 2).astype(np.float32)
+
+    planes = [my_pawn, opp_pawn, my_king, opp_king, throne]
+
+    LIMIT = 51 # 截止<50有51个
+    rem_to_limit = np.full((H, W), float((LIMIT-time)/float(LIMIT)), dtype=np.float32)
+
+    planes.append(rem_to_limit) 
+    X = np.stack(planes, axis=0).astype(np.float32)            # (C,H,W) 6维
+    return X
+

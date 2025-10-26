@@ -63,7 +63,9 @@ class Coach():
             #sym = self.game.getSymmetries(canonicalBoard, pi)
             #for b, p in sym: # board, pi
             #    trainExamples.append([b.astype(np.float32), self.curPlayer, p, None]) # 添加了从board到矩阵的转化，是否数据能够被网络处理
-            trainExamples.append([canonicalBoard.astype(np.float32), self.curPlayer, pi, None]) # 添加了从board到矩阵的转化，是否数据能够被网络处理
+            img2d = np.array(canonicalBoard.getImage(), dtype=np.int8)
+            trainExamples.append((img2d, self.curPlayer, np.asarray(pi, np.float32), canonicalBoard.time, canonicalBoard.size))
+            #trainExamples.append([canonicalBoard.astype(np.float32), self.curPlayer, pi, None]) # 添加了从board到矩阵的转化，是否数据能够被网络处理
 
 
             action = np.random.choice(len(pi), p=pi)
@@ -72,7 +74,7 @@ class Coach():
             r = self.game.getGameEnded(board, self.curPlayer)
 
             if r != 0:
-                return [(x[0], x[2], r * ((-1) ** (x[1] != self.curPlayer))) for x in trainExamples]
+                return [(x[0], x[2], r * ((-1) ** (x[1] != self.curPlayer)), x[3], x[4]) for x in trainExamples]
 
     # 总的学习流程，先训练，然后进行评估
     def learn(self):
@@ -133,10 +135,10 @@ class Coach():
 
             # Tensorboard记录得分率和胜率
             score_rate = float(nwins+draws/2)/(self.args.arenaCompare)            
-            writer.add_scalar("score_rate", score_rate, i)
+            writer.add_scalar("self/score_rate", score_rate, i)
             win_rate = float(nwins) / (pwins + nwins) if (pwins+nwins) > 0 else float('nan')
-            writer.add_scalar("win_rate", win_rate, i)
-            Evaluate_Model_with_Alpha_Beta(new_model=nmcts_player, g=self.game, step=i, write=True)
+            writer.add_scalar("self/win_rate", win_rate, i)
+            Evaluate_Model_with_Alpha_Beta(new_model=nmcts_player, g=self.game, step=i, n=self.args.evaluate, write=True)
 
             if pwins + nwins == 0 or win_rate < self.args.updateThreshold:
                 logger.info('REJECTING NEW MODEL')

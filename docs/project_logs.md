@@ -77,3 +77,11 @@
 
 ## finish random, greedy and alpha-beta agents
 提供了三个模型作为baselines，其中alpha-beta模型将作为基准算模型的Elo分数。
+
+## add Elo Evaluation
+
+![alt text](Elo_Formula.png)
+![alt text](Elo_Principle.png)
+
+## modify model's input
+为了网络能够更好的学习，将原本的(B,1,W,H),手动拆解成(B,6,W,H),每一层包含着特定的信息，即，王座，棋子双方，王双方，剩余时间比例。然后修改相应的输入和网络架构以适应。

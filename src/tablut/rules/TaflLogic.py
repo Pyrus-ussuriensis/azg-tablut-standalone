@@ -110,6 +110,7 @@ class Board():
             image[y][x] += v
         return image
 
+    
 
     def getPlayerToMove(self):
         return -(self.time%2*2-1)

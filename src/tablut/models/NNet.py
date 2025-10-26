@@ -88,12 +88,18 @@ class NNetWrapper(NeuralNet):
         start = time.time()
 
         # preparing input
-        board = torch.FloatTensor(board.astype(np.float64)) # 此处进行了格式转换从而能够输入网络。
-        if args.cuda: board = board.contiguous().cuda()
-        board = board.view(1, self.board_x, self.board_y)
+        img2d = np.array(board.getImage(), dtype=np.int8)
+        img = getNNImage(img2d, board.size, board.time)
+
+        x = torch.from_numpy(img).unsqueeze(0)  # (1,C,H,W)
+        if args.cuda:
+            x = x.contiguous().cuda()
+
+        #board = torch.FloatTensor(board.astype(np.float64)) # 此处进行了格式转换从而能够输入网络。
+        #img = img.view(6, self.board_x, self.board_y)
         self.nnet.eval()
         with torch.no_grad():
-            pi, v = self.nnet(board)
+            pi, v = self.nnet(x)
 
         # print('PREDICTION TIME TAKEN : {0:03f}'.format(time.time()-start))
         return torch.exp(pi).data.cpu().numpy()[0], v.data.cpu().numpy()[0]
