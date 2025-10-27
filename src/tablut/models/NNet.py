@@ -17,31 +17,15 @@ from torch.utils.data import DataLoader
 
 from .TaflNNet import TaflNNet as onnet
 
-args0 = dotdict({
-    'lr': 0.001,
-    'dropout': 0.3,
-    'epochs': 10,
-    'batch_size': 64,
-    'cuda': torch.cuda.is_available(),
-    'num_channels': 512,
-})
-args1 = dotdict({
-    'lr': 1e-3,          # AdamW 建议；若是 SGD 就改 0.1 并配动量/余弦
-    'dropout': 0.10,     # 从 0.3 → 0.1，避免过度随机性
-    'epochs': 6,         # 6 轮足够，小网+MCTS 数据不需要 10
-    'batch_size': 128,   # 4060 + AMP 基本都能扛；内存不够就 96
-    'cuda': torch.cuda.is_available(),
-    'num_channels': 128, # 从 512 降到 128（关键）
-    "policy_rank": 32,
-})
+
 
 
 # 训练超参/网络规模
 args = dotdict({
     'lr': 1e-3,          # Adam常见默认；OpenSpiel等小盘面复现多取0.001。:contentReference[oaicite:8]{index=8}
     'dropout': 0.10,     # 0.1–0.3均可；为减少随机性先取0.1（工程折中；部分研究用到0.3）。:contentReference[oaicite:9]{index=9}
-    'epochs': 6,         # 小网+自博弈数据，6轮足够（再高易过拟合小集）
-    'batch_size': 128,   # 资源允许可128；不够就96（工程建议）
+    'epochs': 8,         # 小网+自博弈数据，6轮足够（再高易过拟合小集）
+    'batch_size': 64,   # 资源允许可128；不够就96（工程建议）
     'cuda': torch.cuda.is_available(),
     'num_channels': 128, # 轻量化以提高自博弈吞吐（工程建议）
     "policy_rank": 32,   # 双线性from×to头的嵌入维；32在精度/显存间折中（工程建议）
@@ -73,7 +57,7 @@ class NNetWrapper(NeuralNet):
             #num_workers=0,#getattr(args, "num_workers", 2),
             pin_memory=True,#getattr(args, "cuda", False),
             #persistent_workers=2,#getattr(args, "num_workers", 0) > 0,
-            drop_last=True,
+            drop_last=False,
         )
 
         for epoch in range(args.epochs):
