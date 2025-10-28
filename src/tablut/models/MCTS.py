@@ -96,17 +96,21 @@ class MCTS():
         """
 
         s = self.game.stringRepresentation(canonicalBoard)
+        p = canonicalBoard.getPlayerToMove()
 
+        # 获取终局值的初值
         if s not in self.Es: # 如果这个状态没有记录过终局值
-            self.Es[s] = self.game.getGameEnded(canonicalBoard, 1) # 记录一次值
+            self.Es[s] = self.game.getGameEnded(canonicalBoard, p) # 记录一次值
+        # 检测跳出递归条件
         if self.Es[s] != 0: # 不为0，结束
             # terminal node
             return -self.Es[s]
 
+        # 获取初始的pi
         if s not in self.Ps:
             # leaf node
             self.Ps[s], v = self.nnet.predict(canonicalBoard) # 用网络预测初值
-            valids = self.game.getValidMoves(canonicalBoard, 1) # 得到合法动作
+            valids = self.game.getValidMoves(canonicalBoard, p) # 得到合法动作
             self.Ps[s] = self.Ps[s] * valids  # masking invalid moves # 筛选合法动作
             sum_Ps_s = np.sum(self.Ps[s]) # 得到所有合法动作值之和
             if sum_Ps_s > 0:
@@ -142,7 +146,7 @@ class MCTS():
                     best_act = a
 
         a = best_act
-        next_s, next_player = self.game.getNextState(canonicalBoard, 1, a)
+        next_s, next_player = self.game.getNextState(canonicalBoard, p, a)
         next_s = self.game.getCanonicalForm(next_s, next_player)
 
         v = self.search(next_s)

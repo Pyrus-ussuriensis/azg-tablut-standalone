@@ -104,7 +104,7 @@ def getNNImage(scalar, S, time):
 
     planes = [my_pawn, opp_pawn, my_king, opp_king, throne]
 
-    LIMIT = 51 # 截止<50有51个
+    LIMIT = 100 # 旧截止<=50
     rem_to_limit = np.full((H, W), float((LIMIT-time)/float(LIMIT)), dtype=np.float32)
 
     planes.append(rem_to_limit) 

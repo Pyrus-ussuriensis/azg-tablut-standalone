@@ -79,6 +79,7 @@ class Coach():
             action = np.random.choice(len(pi), p=pi)
             board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
 
+            # 以1为基准，然后看是否和1相等，其检测的结果就是原对象值
             r = self.game.getGameEnded(board, 1)
 
             if r != 0:

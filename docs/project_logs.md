@@ -92,3 +92,9 @@
 在计入训练数据前将pi用valid过滤一遍
 在MCTS的根部加上噪声
 训练数据的终局值可能视角有问题，修改
+
+## save args
+怀疑可能是数据量的问题，所以调节参数训练
+
+## MCTS endgame side fault, draw condition adjust
+MCTS选择直接用1视角判断终局应该有误，应该以当前视角判断终局值。超过界限的局数改为平局，使用一个极小值表示。

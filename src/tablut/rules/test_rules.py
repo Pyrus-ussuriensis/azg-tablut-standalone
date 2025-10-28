@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from tablut.Args import args
 from tablut.rules.TaflLogic import Board
 from tablut.rules.TaflGame import TaflGame as Game
 from tablut.utils.Digits import int2base, base2int  # 若无就用你写的
@@ -85,5 +86,5 @@ def test_king_edge_win():
 
 def test_50move_rule():
     board = g.getInitBoard()
-    board.time=51
+    board.time=args.limit
     assert board._getWinLose() == -1

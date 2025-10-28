@@ -43,7 +43,7 @@ class NNetWrapper(NeuralNet):
             self.nnet.cuda()
 
     def train(self, examples):
-        optimizer = optim.Adam(self.nnet.parameters())
+        optimizer = optim.Adam(self.nnet.parameters(), lr=args.lr)
         # 推断棋盘边长 n（最后两维）
         b0 = examples[0][0]
         B0 = b0.astype(np.float32) if hasattr(b0, "astype") else np.array(b0, np.float32)
